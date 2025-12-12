@@ -1,0 +1,23 @@
+<div class="hourly-forecast-container">
+    <div class="day-selector-container inline">
+        <mat-label>Hourly forecast</mat-label>
+        <mat-select>
+            @for (day of days; track day) {
+                <mat-option>{{ day }}</mat-option>
+            }
+        </mat-select>
+    </div>
+
+    <div class="hours-forecast-container">
+        @for (hour of hours; track hour) {
+            <div class="hour-card">
+                <span class="inline">
+                    <img src="images/icon-sunny.webp" alt="">
+                    <p class="time">{{ hour }}PM</p>
+                </span>
+
+                <p class="temperature">20</p>
+            </div>
+        }
+    </div>
+</div>

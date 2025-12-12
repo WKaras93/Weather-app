@@ -1,0 +1,80 @@
+@import '../../styles.less';
+
+.search-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 16px;
+
+    .search-form-field {
+        width: 526px;
+        color: @neutral-200;
+        ::ng-deep {
+            .mat-mdc-text-field-wrapper {
+                border-radius: 16px;
+                background-color: @neutral-800;
+            }
+        }
+
+        input,
+        mat-icon,
+        mat-label {
+            color: @neutral-200;
+        }
+    }
+
+    .search-location-button {
+        height: 56px;
+        width: 114px;
+        border-radius: 16px;
+        border: none;
+        background-color: @blue-500;
+        color: @neutral-0;
+        font-size: 16px;
+        cursor: pointer;
+    }
+}
+
+::ng-deep {
+    .cdk-overlay-container {
+        .city-suggestions-container {
+            margin-top: 8px;
+            background-color: @neutral-800;
+            border-radius: 16px !important; //to overwrite material styling
+
+            mat-option > span {
+                opacity: 1;
+                color: @neutral-0;
+            }
+        }
+    }
+}
+
+
+@media screen and (max-width: 1024px) {
+    .search-container {
+
+        .search-form-field {
+            width: calc(100%);
+        }
+
+        .search-location-button {
+            width: 114px;
+        }
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .search-container {
+        flex-direction: column;
+        gap: 0;
+
+        .search-form-field {
+            width: 100%;
+        }
+
+        .search-location-button {
+            width: 100%;
+        }
+    }
+}

@@ -1,0 +1,38 @@
+@import '../../styles.less';
+
+.hourly-forecast-container {
+    background-color: @neutral-800;
+    padding: 16px;
+    border-radius: 16px;
+    height: 100%;
+    box-sizing: border-box;
+
+    .hours-forecast-container {
+        height: calc(100% - 40px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .hour-card {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            border: 1px solid @neutral-600;
+            background-color: @neutral-700;
+            border-radius: 8px;
+            padding: 8px;
+            box-sizing: border-box;
+            height: 60px;
+
+            img {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    }
+}
+
+.inline {
+    display: flex;
+    flex-direction: row;
+}

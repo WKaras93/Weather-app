@@ -1,0 +1,47 @@
+<div *ngIf="!isLoading; else loader" class="forecast-container">
+    <div class="main-weather-display-container">
+        <div class="main-display">
+            <div class="weather-data-container">
+                <div class="location-data-container">
+                    <p class="location">{{ locationName.city + ', ' + locationName.country }}</p>
+                    <p class="date">{{ today | date: 'EEEE, MMM d, y' }}</p>
+                </div>
+
+                <div class="temperature-container">
+                    <img src="images/icon-sunny.webp" alt="">
+                    <p><span>20</span>&deg;</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="details-cards-container">
+            <div class="detail-card">
+                <p class="description">Feels like</p>
+                <p class="value">18&deg;</p>
+            </div>
+
+            <div class="detail-card">
+                <p class="description">Feels like</p>
+                <p class="value">18&deg;</p>
+            </div>
+
+            <div class="detail-card">
+                <p class="description">Feels like</p>
+                <p class="value">18&deg;</p>
+            </div>
+
+            <div class="detail-card">
+                <p class="description">Feels like</p>
+                <p class="value">18&deg;</p>
+            </div>
+        </div>
+
+        <app-daily-forecast-component></app-daily-forecast-component>
+    </div>
+
+    <app-hourly-forecast-component></app-hourly-forecast-component>
+</div>
+
+<ng-template #loader>
+    <span>LOADER</span>
+</ng-template>

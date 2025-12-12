@@ -1,0 +1,46 @@
+<div class="search-container">
+    <mat-form-field class="search-form-field">
+        <mat-label>Search for a place...</mat-label>
+
+        <mat-icon matPrefix>search</mat-icon>
+
+        <input
+            #searchInputRef
+            matInput
+            id="searchLocation"
+            name="searchLocation"
+            (ngModelChange)="onSearchChange($event)"
+            [matAutocomplete]="auto"
+            [(ngModel)]="searchLocationValue"
+        >
+
+        <mat-icon
+            *ngIf="searchLocationValue"
+            matSuffix
+            (click)="clearInput(searchInputRef)"
+        >
+            close
+        </mat-icon>
+
+        <mat-autocomplete #auto class="city-suggestions-container">
+            <mat-option *ngIf="(searchLocationValue || '').length < 3" disabled>
+                Type at least 3 characters
+            </mat-option>
+
+            <mat-option
+                *ngFor="let city of citySuggestions"
+                (onSelectionChange)="selectCity(city)"
+            >
+                {{ city.name }}, {{ city.country }}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <button
+        aria-label="Search"
+        class="search-location-button"
+        (click)="searchLocation()"
+    >
+        Search
+    </button>
+</div>

@@ -1,0 +1,49 @@
+@import '../../styles.less';
+
+.daily-forecast-container {
+    .days-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 16px;
+
+        .day-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            background-color: @neutral-800;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid @neutral-600;
+
+            img {
+                height: 40px;
+                width: 40px;
+            }
+
+            .temperature-container {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .daily-forecast-container {
+        .days-container {
+            flex-wrap: wrap;
+            gap: 10px;
+
+            .day-card {
+                flex-basis: calc(20% - 10px);
+                flex-grow: 0;
+                flex-shrink: 0;
+            }
+        }
+    }
+}
