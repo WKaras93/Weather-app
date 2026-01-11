@@ -1,22 +1,22 @@
 <div class="hourly-forecast-container">
     <div class="day-selector-container inline">
         <mat-label>Hourly forecast</mat-label>
-        <mat-select>
+        <mat-select [(value)]="selectedDay" (valueChange)="onDayChange($event)">
             @for (day of days; track day) {
-                <mat-option>{{ day }}</mat-option>
+                <mat-option [value]="day">{{ day.name }}</mat-option>
             }
         </mat-select>
     </div>
 
     <div class="hours-forecast-container">
-        @for (hour of hours; track hour) {
+        @for (hourForecast of hourlyForecasts | slice:0:8; track hourForecast) {
             <div class="hour-card">
                 <span class="inline">
-                    <img src="images/icon-sunny.webp" alt="">
-                    <p class="time">{{ hour }}PM</p>
+                    <img [src]="getWeatherIcon(hourForecast.weatherCode)" alt="">
+                    <p class="time">{{ hourForecast.time }}</p>
                 </span>
 
-                <p class="temperature">20</p>
+                <p class="temperature">{{ hourForecast.temperature }}</p>
             </div>
         }
     </div>

@@ -2,15 +2,15 @@
     <p class="title">Daily forecast</p>
 
     <div class="days-container">
-        @for (day of days; track day) {
+        @for (day of dailyForecasts; track day) {
             <div class="day-card">
-                <p>{{ day }}</p>
+                <p>{{ day.day }}</p>
 
-                <img src="images/icon-sunny.webp" alt="">
+                <img [src]="getWeatherIcon(day.forecastCode)" alt="">
 
                 <div class="temperature-container">
-                    <p>20</p>
-                    <p>14</p>
+                    <p>{{ day.maxTemperature }}</p>
+                    <p>{{ day.minTemperature }}</p>
                 </div>
             </div>
         }

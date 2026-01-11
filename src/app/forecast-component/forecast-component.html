@@ -8,8 +8,8 @@
                 </div>
 
                 <div class="temperature-container">
-                    <img src="images/icon-sunny.webp" alt="">
-                    <p><span>20</span>&deg;</p>
+                    <img [src]="getWeatherIcon(currentWeatherData.weatherCode)" alt="">
+                    <p><span>{{ currentWeatherData.temperature }}</span>&deg;</p>
                 </div>
             </div>
         </div>
@@ -17,22 +17,22 @@
         <div class="details-cards-container">
             <div class="detail-card">
                 <p class="description">Feels like</p>
-                <p class="value">18&deg;</p>
+                <p class="value">{{ currentWeatherData.apparentTemperature }}&deg;</p>
             </div>
 
             <div class="detail-card">
-                <p class="description">Feels like</p>
-                <p class="value">18&deg;</p>
+                <p class="description">Humidity</p>
+                <p class="value">{{ currentWeatherData.humidity }}%</p>
             </div>
 
             <div class="detail-card">
-                <p class="description">Feels like</p>
-                <p class="value">18&deg;</p>
+                <p class="description">Wind</p>
+                <p class="value">{{ currentWeatherData.windSpeed }} km/h</p>
             </div>
 
             <div class="detail-card">
-                <p class="description">Feels like</p>
-                <p class="value">18&deg;</p>
+                <p class="description">Precipitation</p>
+                <p class="value">{{ currentWeatherData.precipitation  }} mm</p>
             </div>
         </div>
 

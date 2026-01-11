@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Observer } from 'rxjs';
+import { BehaviorSubject, Observable, Observer } from 'rxjs';
 
 export interface Coordinates {
     latitude: number;
@@ -16,10 +16,19 @@ export interface LocationName {
     providedIn: 'root'
 })
 export class GeolocationService {
+    private locationSubject = new BehaviorSubject<[Coordinates, LocationName] | null>(null);
+    location$ = this.locationSubject.asObservable();
 
     constructor(private httpClient: HttpClient) {}
 
     public getCurrentLocation(): Observable<[Coordinates, LocationName]> {
+        if (this.locationSubject.value) {
+            return new Observable(obs => {
+                obs.next(this.locationSubject.value!);
+                obs.complete();
+            })
+        }
+        
         return new Observable((observer: Observer<[Coordinates, LocationName]>) => {
             if (!('geolocation' in navigator)) {
                 observer.error('Geolocation is not available in this browser.')
@@ -39,8 +48,10 @@ export class GeolocationService {
                                 city: city,
                                 country: country
                             }
+                            const payload: [Coordinates, LocationName] = [position.coords, location];
+                            this.locationSubject.next(payload);
 
-                            observer.next([position.coords, location]);
+                            observer.next(payload);
                             observer.complete();
                         },
                         error: err => {
@@ -62,7 +73,7 @@ export class GeolocationService {
                     observer.error(errMessage);
                     observer.complete();
                 },
-                { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                { enableHighAccuracy: false, timeout: 5000, maximumAge: 0 }
             );
         });
     }
@@ -72,7 +83,8 @@ export class GeolocationService {
             .set('lat', coordinates.latitude)
             .set('lon', coordinates.longitude)
             .set('format', 'json')
-            .set('addressdetails', '1');
+            .set('addressdetails', '1')
+            .set('accept-language', 'en');
         
         return this.httpClient.get<any>('https://nominatim.openstreetmap.org/reverse', { params })
     }
