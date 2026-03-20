@@ -10,6 +10,7 @@ import { WindSpeedDisplayPipe } from '../pipes/wind-speed-display.pipe';
 import { CurrentWeatherData } from '../models/current-weather.model';
 import { WeatherFacadeService } from '../services/weather-facade/weather-facade.service';
 import { Subject, takeUntil } from 'rxjs';
+import { PrecipitationDisplayPipe } from '../pipes/precipitation-display.pipe';
 
 @Component({
     selector: 'app-forecast-component',
@@ -18,7 +19,8 @@ import { Subject, takeUntil } from 'rxjs';
         DailyForecastComponent,
         HourlyForecastComponent,
         TemperatureDisplayPipe,
-        WindSpeedDisplayPipe
+        WindSpeedDisplayPipe,
+        PrecipitationDisplayPipe
     ],
     templateUrl: './forecast-component.html',
     styleUrl: './forecast-component.less'
