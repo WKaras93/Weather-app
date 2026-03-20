@@ -1,4 +1,4 @@
-<div *ngIf="!isLoading; else loader" class="forecast-container">
+<div *ngIf="!isLoading" class="forecast-container">
     <div class="main-weather-display-container">
         <div class="main-display">
             <div class="weather-data-container">
@@ -9,7 +9,7 @@
 
                 <div class="temperature-container">
                     <img [src]="getWeatherIcon(currentWeatherData.weatherCode)" alt="">
-                    <p><span>{{ currentWeatherData.temperature }}</span>&deg;</p>
+                    <p>{{ currentWeatherData.temperature | temperatureDisplay }}</p>
                 </div>
             </div>
         </div>
@@ -17,7 +17,7 @@
         <div class="details-cards-container">
             <div class="detail-card">
                 <p class="description">Feels like</p>
-                <p class="value">{{ currentWeatherData.apparentTemperature }}&deg;</p>
+                <p class="value">{{ currentWeatherData.apparentTemperature | temperatureDisplay }}</p>
             </div>
 
             <div class="detail-card">
@@ -27,7 +27,7 @@
 
             <div class="detail-card">
                 <p class="description">Wind</p>
-                <p class="value">{{ currentWeatherData.windSpeed }} km/h</p>
+                <p class="value">{{ currentWeatherData.windSpeed | windSpeedDisplay }}</p>
             </div>
 
             <div class="detail-card">

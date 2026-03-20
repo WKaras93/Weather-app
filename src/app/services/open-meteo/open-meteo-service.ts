@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { UnitService} from '../unit/unit-service';
 
 export interface DailyForecastResponse {
   daily: {
@@ -25,13 +26,15 @@ export interface HourlyForecastResponse {
 export class OpenMeteoService {
   private apiUrl = 'https://api.open-meteo.com/v1/forecast';
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private unitService: UnitService) {}
 
   getCurrentWeather(latitude: number, longitude: number): Observable<any> {
     let params = new HttpParams()
       .set('latitude', latitude.toString())
       .set('longitude', longitude.toString())
-      .set('temperature_unit', 'celsius')
+      .set('temperature_unit', this._getTemperatureUnit())
+      .set('wind_speed_unit', this._getWindSpeedUnit())
+      .set('precipitation_unit', this._getPrecipitationUnit())
       .set('timezone', 'auto')
       .set('current', 'temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,wind_speed_10m,weather_code')
     
@@ -42,7 +45,9 @@ export class OpenMeteoService {
     let params = new HttpParams()
       .set('latitude', latitude.toString())
       .set('longitude', longitude.toString())
-      .set('temperature_unit', 'celsius')
+      .set('temperature_unit', this._getTemperatureUnit())
+      .set('wind_speed_unit', this._getWindSpeedUnit())
+      .set('precipitation_unit', this._getPrecipitationUnit())
       .set('timezone', 'auto')
       .set('daily', 'weather_code,temperature_2m_max,temperature_2m_min')
     
@@ -53,7 +58,9 @@ export class OpenMeteoService {
     let params = new HttpParams()
       .set('latitude', latitude.toString())
       .set('longitude', longitude.toString())
-      .set('temperature_unit', 'celsius')
+      .set('temperature_unit', this._getTemperatureUnit())
+      .set('wind_speed_unit', this._getWindSpeedUnit())
+      .set('precipitation_unit', this._getPrecipitationUnit())
       .set('timezone', 'auto')
       .set('hourly', 'weather_code,temperature_2m');
     if (startDate) {
@@ -65,6 +72,18 @@ export class OpenMeteoService {
     }
 
     return this.httpClient.get<HourlyForecastResponse>(this.apiUrl, { params });
+  }
+
+  private _getTemperatureUnit(): string {
+    return this.unitService.currentUnitSystem === 'metric' ? 'celsius' : 'fahrenheit';
+  }
+
+  private _getWindSpeedUnit(): string {
+    return this.unitService.currentUnitSystem === 'metric' ? 'kmh' : 'mph';
+  }
+
+  private _getPrecipitationUnit(): string {
+    return this.unitService.currentUnitSystem === 'metric' ? 'mm' : 'inch';
   }
 
   private _getNextDate(date: string): string {

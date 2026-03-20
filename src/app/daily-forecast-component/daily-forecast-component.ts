@@ -3,14 +3,7 @@ import { OpenMeteoService, DailyForecastResponse } from '../services/open-meteo/
 import { Coordinates, GeolocationService, LocationName } from '../services/geolocation/geolocation-service';
 import { WeatherIconService } from '../services/weather-icon/weather-icon-service';
 import { map } from 'rxjs';
-
-export interface DailyForecast {
-    minTemperature: number;
-    maxTemperature: number;
-    forecastCode: number;
-    date: string;
-    day: string;
-}
+import { DailyForecast } from '../models/daily-forecast.model';
 
 @Component({
   selector: 'app-daily-forecast-component',

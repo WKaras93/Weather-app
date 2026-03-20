@@ -1,0 +1,118 @@
+@import url(../../styles.less);
+
+.units-button-container {
+    button {
+        width: 120px;
+        padding: 0;
+        border: none;
+        border-radius: 8px;
+        background-color: @neutral-600;
+        
+        span {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 10px;
+            color: @neutral-0 !important;
+        }
+
+        .units-button-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 12px 16px;
+            font-size: 16px;
+
+
+            p {
+                margin: 0;
+            }
+        }
+    }
+}
+
+::ng-deep {
+    .mat-mdc-menu-panel.units-menu {
+        width: 250px;
+        height: auto;
+        background-color: @neutral-800;
+        color: @neutral-0;
+        border-radius: 12px;
+
+        .mat-mdc-menu-content {
+            height: 100%;
+            box-sizing: border-box;
+            padding: 6px 8px;
+        }
+        .section {
+            .section-name {
+                font-family: Sans;
+                font-size: 16px;
+                color: @neutral-300;
+                margin: 8px 0 0 6px;
+            }
+
+            .switch-button {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                padding: 12px 0;
+                color: @neutral-0;
+                text-align: center;
+
+                span {
+                    font-size: 20px;
+                    font-family: Sans;
+                }
+            }
+
+            .options {
+                .unit-wrapper {
+                    height: 40px;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 6px;
+                    gap: 10px;
+
+                    p {
+                        margin: 0;
+                        font-family: Sans;
+                        font-size: 16px;
+                    }
+
+                    &.active {
+                        background-color: @neutral-700;
+                        border-radius: 12px;
+                    }
+                }
+            }
+
+            .separator {
+                border: 1px solid @neutral-600;
+            }
+        }
+    }
+}
+
+
+@media screen and (max-width: 767px) {
+    .units-button-container {
+        button {
+            width: 90px;
+            height: 35px;
+
+            .units-button-container {
+                padding: 8px 10px;
+                font-size: 12px;
+
+                img {
+                    height: 16px;
+                    width: 16px;
+                }
+            }
+        }
+    }
+}

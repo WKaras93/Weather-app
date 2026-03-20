@@ -10,12 +10,7 @@ import { Coordinates, GeolocationService, LocationName } from '../services/geolo
 import { HourlyForecastResponse, OpenMeteoService } from '../services/open-meteo/open-meteo-service';
 import { WeatherIconService } from '../services/weather-icon/weather-icon-service';
 import { map } from 'rxjs';
-
-interface HourlyForecast {
-  temperature: number;
-  weatherCode: number;
-  time: string;
-}
+import { HourlyForecast } from '../models/hourly-forecast.model';
 
 interface DayOption {
   date: string;

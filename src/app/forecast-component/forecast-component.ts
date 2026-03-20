@@ -1,72 +1,75 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { HourlyForecastComponent } from '../hourly-forecast-component/hourly-forecast-component';
 import { DailyForecastComponent } from '../daily-forecast-component/daily-forecast-component';
-import { Coordinates, GeolocationService, LocationName } from '../services/geolocation/geolocation-service';
-import { CommonModule } from '@angular/common';
-import { OpenMeteoService } from '../services/open-meteo/open-meteo-service';
+import { LocationName } from '../services/geolocation/geolocation-service';
 import { WeatherIconService } from '../services/weather-icon/weather-icon-service';
-
-export interface CurrentWeatherData {
-    apparentTemperature: number;
-    humidity: number;
-    precipitation: number;
-    temperature: number;
-    windSpeed: number;
-    weatherCode: number;
-}
+import { TemperatureDisplayPipe } from '../pipes/temperature-display.pipe';
+import { WindSpeedDisplayPipe } from '../pipes/wind-speed-display.pipe';
+import { CurrentWeatherData } from '../models/current-weather.model';
+import { WeatherFacadeService } from '../services/weather-facade/weather-facade.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-forecast-component',
     imports: [
         CommonModule,
         DailyForecastComponent,
-        HourlyForecastComponent
+        HourlyForecastComponent,
+        TemperatureDisplayPipe,
+        WindSpeedDisplayPipe
     ],
     templateUrl: './forecast-component.html',
     styleUrl: './forecast-component.less'
 })
-export class ForecastComponent implements OnInit {
+export class ForecastComponent implements OnInit, OnDestroy {
     locationName!: LocationName;
     isLoading: boolean;
     today: Date;
     currentWeatherData!: CurrentWeatherData;
+    unitSystem!: string;
+
+    private destroy$ = new Subject<void>();
 
     constructor(
-        private _locationService: GeolocationService,
-        private _openMeteoService: OpenMeteoService,
-        private _weatherIconService: WeatherIconService
+        private _weatherFacadeService: WeatherFacadeService,
+        private _weatherIconService: WeatherIconService,
     ) {
         this.isLoading = true;
         this.today = new Date();
     }
 
     ngOnInit(): void {
-        this.updateCurrentWeatherData();
+        this._weatherFacadeService.loadWeatherData();
+
+        this._weatherFacadeService.location$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(location => this.locationName = location![1]);
+    
+        this._weatherFacadeService.currentWeather$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(currentWeather => this.currentWeatherData = currentWeather!);
+
+        this._weatherFacadeService.unitSystem$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(unitSystem => this.unitSystem = unitSystem);
+        
+        this._weatherFacadeService.isLoading$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(isLoading => this.isLoading = isLoading);
+
+        // this._weatherFacadeService.error$
+        //     .pipe(takeUntil(this.destroy$))
+        //     .subscribe(error => this.error = error);
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
     public getWeatherIcon(weatherCode: number): string {
         return this._weatherIconService.getMappedWeatherIcon(weatherCode);
-    }
-
-    private updateCurrentWeatherData() {
-        this._locationService.getCurrentLocation().subscribe((location: [Coordinates, LocationName]) => {
-            this.locationName = location[1];
-            this.isLoading = false;
-
-            this._openMeteoService.getCurrentWeather(location[0].latitude, location[0].longitude).subscribe(weatherResponse => {
-                console.log('getCurrentWeather ', weatherResponse)
-                const currentWeatherData = weatherResponse.current;
-
-                this.currentWeatherData = {
-                    apparentTemperature: Math.round(currentWeatherData.apparent_temperature),
-                    humidity: currentWeatherData.relative_humidity_2m,
-                    precipitation: currentWeatherData.precipitation,
-                    temperature: Math.round(currentWeatherData.temperature_2m),
-                    windSpeed: Math.round(currentWeatherData.wind_speed_10m),
-                    weatherCode: currentWeatherData.weather_code
-                }
-            });
-        });
     }
 }
