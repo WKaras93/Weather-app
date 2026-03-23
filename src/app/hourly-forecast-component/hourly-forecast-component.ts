@@ -9,8 +9,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { Coordinates, GeolocationService, LocationName } from '../services/geolocation/geolocation-service';
 import { HourlyForecastResponse, OpenMeteoService } from '../services/open-meteo/open-meteo-service';
 import { WeatherIconService } from '../services/weather-icon/weather-icon-service';
-import { map } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { HourlyForecast } from '../models/hourly-forecast.model';
+import { WeatherFacadeService } from '../services/weather-facade/weather-facade.service';
 
 interface DayOption {
   date: string;
@@ -35,24 +36,24 @@ export class HourlyForecastComponent implements OnInit {
   selectedDay: DayOption;
   days: DayOption[];
   hourlyForecasts: HourlyForecast[] = [];
-  coords: Coordinates | null = null;
 
-  constructor(
-      private _locationService: GeolocationService,
-      private _openMeteoService: OpenMeteoService,
-      private _weatherIconService: WeatherIconService
+  destroy$ = new Subject<void>();
+
+  constructor (
+    private _weatherFacadeService: WeatherFacadeService,
+    private _weatherIconService: WeatherIconService
   ) {
     this.days = this.getDaysOfWeek();
     this.selectedDay = this.days[0];
   }
 
   ngOnInit() {
-    this._locationService.getCurrentLocation().subscribe(
-        ([coords, locationName]: [Coordinates, LocationName]) => {
-            this.coords = coords;
-            this._loadHourlyForecasts();
-        }
-    );
+    this._weatherFacadeService.hourlyForecasts$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(hourlyForecasts => {
+            console.log('Received hourly forecasts:', hourlyForecasts);
+            this.hourlyForecasts = hourlyForecasts
+        });
   }
 
   public getWeatherIcon(weatherCode: number): string {
@@ -64,40 +65,12 @@ export class HourlyForecastComponent implements OnInit {
     this._loadHourlyForecasts(this.selectedDay.date);
   }
 
-  private _loadHourlyForecasts(date?: string): void {
-    if (!this.coords) {
-        return;
-    }
-    this._openMeteoService
-      .getHourlyForecast(this.coords.latitude, this.coords.longitude, date)
-      .pipe(
-          map((weatherResponse: HourlyForecastResponse) =>
-              weatherResponse.hourly.time.map((_, i) => ({
-                temperature: Math.round(weatherResponse.hourly.temperature_2m[i]),
-                weatherCode: weatherResponse.hourly.weather_code[i],
-                time: this.parseTime(weatherResponse.hourly.time[i])
-              })
-          )
-        )
-      )
-      .subscribe((hourlyForecasts) => {
-          this.hourlyForecasts = hourlyForecasts;
-      });
-  }
-
-  private parseTime(time: string): string {
-    const date = new Date(time);
-    const hours = date.getHours();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    const formattedHours = hours % 12 || 12;
-
-    return `${formattedHours} ${ampm}`;
-  }
-
-  private getCurrentDay(): DayOption {
-    const today = new Date();
-    console.log({date: today.toISOString().split('T')[0], name: `${new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(today)} (today)`})
-    return {date: today.toISOString().split('T')[0], name: `${new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(today)} (today)`};
+  private _loadHourlyForecasts(date: string): void {
+    this._weatherFacadeService.getHourlyForecastForDay(date)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(hourlyForecasts => {
+            this.hourlyForecasts = hourlyForecasts;
+        });
   }
 
   private getDaysOfWeek(): DayOption[] {
