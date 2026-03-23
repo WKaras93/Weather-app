@@ -9,8 +9,8 @@
                 <img [src]="getWeatherIcon(day.forecastCode)" alt="">
 
                 <div class="temperature-container">
-                    <p>{{ day.maxTemperature }}</p>
-                    <p>{{ day.minTemperature }}</p>
+                    <p>{{ day.maxTemperature | temperatureDisplay }}</p>
+                    <p>{{ day.minTemperature | temperatureDisplay }}</p>
                 </div>
             </div>
         }
