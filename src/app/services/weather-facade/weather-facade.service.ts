@@ -115,8 +115,8 @@ export class WeatherFacadeService implements OnDestroy {
         if (!location) throw new Error('Location not available');
 
         return this._openMeteoService
-        .getHourlyForecast(location[0].latitude, location[0].longitude, date)
-        .pipe(map(response => this.mapHourlyForecast(response)));
+            .getHourlyForecast(location[0].latitude, location[0].longitude, date)
+            .pipe(map(response => this.mapHourlyForecast(response)));
     }
 
     ngOnDestroy() {
@@ -232,7 +232,7 @@ export class WeatherFacadeService implements OnDestroy {
         const { time, temperature_2m, weather_code } = response.hourly;
 
         return time.map((time: string, index: number): HourlyForecast => ({
-            time,
+            time: this.parseTime(time),
             temperature: Math.round(temperature_2m[index]),
             weatherCode: weather_code[index]
         }));
@@ -241,5 +241,14 @@ export class WeatherFacadeService implements OnDestroy {
     private getDay(date: string): string {
         const _date = new Date(date);
         return (new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(_date));
+    }
+
+    private parseTime(time: string): string {
+        const date = new Date(time);
+        const hours = date.getHours();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const formattedHours = hours % 12 || 12;
+
+        return `${formattedHours} ${ampm}`;
     }
 }
