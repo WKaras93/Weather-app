@@ -11,6 +11,7 @@ import { HourlyForecastResponse, OpenMeteoService } from '../services/open-meteo
 import { WeatherIconService } from '../services/weather-icon/weather-icon-service';
 import { map, Subject, takeUntil } from 'rxjs';
 import { HourlyForecast } from '../models/hourly-forecast.model';
+import { TemperatureDisplayPipe } from '../pipes/temperature-display.pipe';
 import { WeatherFacadeService } from '../services/weather-facade/weather-facade.service';
 
 interface DayOption {
@@ -27,7 +28,8 @@ interface DayOption {
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    FormsModule
+    FormsModule,
+    TemperatureDisplayPipe
   ],
   templateUrl: './hourly-forecast-component.html',
   styleUrl: './hourly-forecast-component.less'

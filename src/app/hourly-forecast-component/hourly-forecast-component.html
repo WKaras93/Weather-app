@@ -1,7 +1,12 @@
 <div class="hourly-forecast-container">
     <div class="day-selector-container inline">
         <mat-label>Hourly forecast</mat-label>
-        <mat-select [(value)]="selectedDay" (valueChange)="onDayChange($event)">
+        <mat-select
+            panelClass="day-selector-panel"
+            panelWidth="200px"
+            [(value)]="selectedDay"
+            (valueChange)="onDayChange($event)"
+            >
             @for (day of days; track day) {
                 <mat-option [value]="day">{{ day.name }}</mat-option>
             }
@@ -16,7 +21,7 @@
                     <p class="time">{{ hourForecast.time }}</p>
                 </span>
 
-                <p class="temperature">{{ hourForecast.temperature }}</p>
+                <p class="temperature">{{ hourForecast.temperature | temperatureDisplay }}</p>
             </div>
         }
     </div>

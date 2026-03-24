@@ -19,7 +19,6 @@ export class TemperatureDisplayPipe implements PipeTransform {
             return '';
         }
 
-        const unitSymbol = this.unit === 'metric' ? '°C' : '°F';
-        return `${value}${unitSymbol}`;
+        return `${value}°`;
     }
 }
