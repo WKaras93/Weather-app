@@ -20,6 +20,6 @@ export class PrecipitationDisplayPipe implements PipeTransform {
         }
 
         const unitSymbol = this.unit === 'metric' ? 'mm' : 'in';
-        return `${value}${unitSymbol}`;
+        return `${value} ${unitSymbol}`;
     }
 }

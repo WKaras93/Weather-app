@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { UnitService, UnitSystem } from "../unit/unit-service";
 import { HourlyForecastResponse, OpenMeteoService } from "../open-meteo/open-meteo-service";
 import { Coordinates, GeolocationService } from "../geolocation/geolocation-service";
@@ -32,7 +32,7 @@ interface CacheStore {
 }
 
 @Injectable({ providedIn: 'root' })
-export class WeatherFacadeService {
+export class WeatherFacadeService implements OnDestroy {
     private stateSubject = new BehaviorSubject<WeatherViewModel>(INITIAL_STATE);
     private subscriptions = new Subscription();
 
@@ -63,7 +63,15 @@ export class WeatherFacadeService {
             }),
             filter(location => location !== null)
         ).subscribe(location => {
-            this.fetchAndCacheWeather(location![0], true).subscribe();
+            const coords = location![0];
+            const cacheKey = this.buildCacheKey(coords, this._unitService.currentUnitSystem);
+            const cached = this.readFromStorgage(cacheKey);
+
+            if (cached) {
+                this.patchState({ ...cached.data, isLoading: false, error: null });
+            } else {
+                this.fetchAndCacheWeather(coords, false).subscribe();
+            }
     });
 
     this.subscriptions.add(unitSyncSub);
@@ -80,8 +88,7 @@ export class WeatherFacadeService {
             switchMap(location => {
                 const coords = location[0];
                 const cacheKey = this.buildCacheKey(coords, this._unitService.currentUnitSystem);
-                // const cached = this.readFromStorgage(cacheKey);
-                const cached = null;
+                const cached = this.readFromStorgage(cacheKey);
 
                 if (cached) {
                     this.patchState({ ...cached.data, isLoading: false, error: null });
