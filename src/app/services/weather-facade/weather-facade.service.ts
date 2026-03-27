@@ -1,13 +1,14 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { UnitService, UnitSystem } from "../unit/unit-service";
 import { HourlyForecastResponse, OpenMeteoService } from "../open-meteo/open-meteo-service";
-import { Coordinates, GeolocationService } from "../geolocation/geolocation-service";
+import { Coordinates, GeolocationService, LocationName } from "../geolocation/geolocation-service";
 import { skip, combineLatest, debounceTime, switchMap, of, Observable, BehaviorSubject, Subscription, forkJoin } from "rxjs";
 import { filter, map, min, tap } from "rxjs/operators";
 import { WeatherViewModel } from "../../models/weather-view.model";
 import { CurrentWeatherData } from "../../models/current-weather.model";
 import { HourlyForecast } from "../../models/hourly-forecast.model";
 import { DailyForecast } from "../../models/daily-forecast.model";
+import { CityResult } from "../cities/cities-search-service";
 
 const INITIAL_STATE: WeatherViewModel = {
     location: null,
@@ -117,6 +118,39 @@ export class WeatherFacadeService implements OnDestroy {
         return this._openMeteoService
             .getHourlyForecast(location[0].latitude, location[0].longitude, date)
             .pipe(map(response => this.mapHourlyForecast(response)));
+    }
+
+    searchCity(city: CityResult) {
+        if (this.stateSubject.value.isLoading) return;
+
+        const coords: Coordinates = {
+            latitude: city.latitude,
+            longitude: city.longitude
+        };
+        const locationName: LocationName = {
+            city: city.name,
+            country: city.country
+        };
+
+        this.patchState({
+            ...INITIAL_STATE,
+            unitSystem: this._unitService.currentUnitSystem,
+            location: [coords, locationName],
+            isLoading: true,
+            error: null
+        });
+
+        const cacheKey = this.buildCacheKey(coords, this._unitService.currentUnitSystem);
+        const cached = this.readFromStorgage(cacheKey);
+
+        if (cached) {
+            this.patchState({ ...cached.data, isLoading: false });
+            return;
+        }
+
+        this.fetchAndCacheWeather(coords).subscribe({
+            error: (err: string) => this.patchState({ isLoading: false, error: err }),
+        });
     }
 
     ngOnDestroy() {

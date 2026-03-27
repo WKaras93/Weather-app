@@ -53,7 +53,6 @@ export class HourlyForecastComponent implements OnInit {
     this._weatherFacadeService.hourlyForecasts$
         .pipe(takeUntil(this.destroy$))
         .subscribe(hourlyForecasts => {
-            console.log('Received hourly forecasts:', hourlyForecasts);
             this.hourlyForecasts = hourlyForecasts
         });
   }
