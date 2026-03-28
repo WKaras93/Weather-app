@@ -22,14 +22,18 @@
             close
         </mat-icon>
 
-        <mat-autocomplete #auto class="city-suggestions-container">
+        <mat-autocomplete
+            #auto
+            class="city-suggestions-container"
+            (optionSelected)="selectCity($event.option.value)"
+            >
             <mat-option *ngIf="(searchLocationValue || '').length < 3" disabled>
                 Type at least 3 characters
             </mat-option>
 
             <mat-option
                 *ngFor="let city of citySuggestions"
-                (onSelectionChange)="selectCity(city)"
+                [value]="city"
             >
                 {{ city.name }}, {{ city.country }}
             </mat-option>

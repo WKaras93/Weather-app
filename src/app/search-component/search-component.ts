@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { CitiesSearchService, CityResult } from '../services/cities/cities-search-service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { WeatherFacadeService } from '../services/weather-facade/weather-facade.service';
+import { debounceTime, distinctUntilChanged, Subject, switchMap, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-search-component',
@@ -24,36 +26,60 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
   templateUrl: './search-component.html',
   styleUrl: './search-component.less'
 })
-export class SearchComponent {
+export class SearchComponent implements OnDestroy {
   public searchLocationValue: string = '';
-  citySuggestions: CityResult[] = [];
+  public citySuggestions: CityResult[] = [];
 
-  constructor(private _citiesSearchService: CitiesSearchService) {}
+  private searchInput$ = new Subject<string>();
+  private destroy$ = new Subject<void>();
+  private selectedCity: CityResult | null = null;
+
+  constructor(
+    private _citiesSearchService: CitiesSearchService,
+    private _weatherFacadeService: WeatherFacadeService
+  ) {
+    this.searchInput$.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(value => {
+        if (!value || value.length < 3) {
+          this.citySuggestions = [];
+          return [];
+        }
+        return this._citiesSearchService.getSearchCities(value);
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe(cities => {
+      this.citySuggestions = cities;
+    });
+  }
 
   public clearInput(searchInputRef: HTMLInputElement) {
     this.searchLocationValue = '';
+    this.selectedCity = null;
+    this.citySuggestions = [];
     searchInputRef.focus();
   }
 
   public searchLocation() {
-    
+    if (!this.selectedCity) return;
+    this._weatherFacadeService.searchCity(this.selectedCity);
   }
 
-  onSearchChange(value: string) {
-    console.log('onSearchChange')
+  public onSearchChange(value: string) {
     this.searchLocationValue = value;
-
-    if (!value || value.length < 3) {
-      this.citySuggestions = [];
-      return;
-    }
-
-    this._citiesSearchService.getSearchCities(value).subscribe(cities => {
-      this.citySuggestions = cities;
-    })
+    this.searchInput$.next(value);
+    this.searchLocation();
   }
 
-  selectCity(city: CityResult) {
-    
+  public selectCity(city: CityResult) {
+    this.selectedCity = city;
+    this.searchLocationValue = city.name;
+    this.citySuggestions = [];
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
