@@ -1,66 +1,89 @@
 <div class="units-button-container">
-    <button mat-button [matMenuTriggerFor]="unitsMenu">
-        <span>
-            <img src="images/icon-units.svg" alt="Units">
-            <p>Units</p>
-            <img src="images/icon-dropdown.svg" alt="Dropdown">
-        </span>
-    </button>
+  <button
+    mat-button
+    aria-haspopup="menu"
+    aria-label="Units menu"
+    [attr.aria-expanded]="menuOpen"
+    [matMenuTriggerFor]="unitsMenu"
+    >
+    <span aria-hidden="true">
+      <img src="images/icon-units.svg" alt="" role="presentation">
+      <p>Units</p>
+      <img src="images/icon-dropdown.svg" alt="" role="presentation">
+    </span>
+  </button>
 
-    <mat-menu
-        #unitsMenu="matMenu"
-        class="units-menu"
-        xPosition="before"
-        yPosition="below"
+  <mat-menu
+    #unitsMenu="matMenu"
+    class="units-menu"
+    xPosition="before"
+    yPosition="below"
+    >
+    <div class="section">
+      <button
+        class="switch-button"
+        mat-menu-item
+        [aria-label]="isMetric ? 'Switch to imperial units' : 'Switch to metric units'"
+        (click)="$event.stopPropagation(); toggleUnits()"
         >
-        <div class="section">
-             <button mat-menu-item (click)="$event.stopPropagation(); toggleUnits()" class="switch-button">
-                {{ isMetric ? 'Switch to imperial' : 'Switch to metric' }}
-            </button>
-        </div>
+        {{ isMetric ? 'Switch to imperial' : 'Switch to metric' }}
+      </button>
+    </div>
 
-        <div class="section">
-            <p class="section-name">Temperature</p>
-            <div class="options">
-                <div class="unit-wrapper" [class.active]="isMetric">
-                    <p>Celsius (°C)</p>
-                    <mat-icon *ngIf="isMetric" matSuffix>check</mat-icon>
-                </div>
-                <div class="unit-wrapper" [class.active]="!isMetric">
-                    <p>Fahrenheit (°F)</p>
-                    <mat-icon *ngIf="!isMetric" matSuffix>check</mat-icon>
-                </div>
-            </div>
-            <hr class="separator">
+    <div class="section">
+      <p class="section-name">Temperature</p>
+      <div class="options">
+        <div class="unit-wrapper" [class.active]="isMetric">
+          <p>Celsius (°C)</p>
+          @if (isMetric) {
+            <mat-icon matSuffix>check</mat-icon>
+          }
         </div>
+        <div class="unit-wrapper" [class.active]="!isMetric">
+          <p>Fahrenheit (°F)</p>
+          @if (!isMetric) {
+            <mat-icon matSuffix>check</mat-icon>
+          }
+        </div>
+      </div>
+      <hr class="separator">
+    </div>
 
-        <div class="section">
-            <p class="section-name">Wind Speed</p>
-            <div class="options">
-                <div class="unit-wrapper" [class.active]="isMetric">
-                    <p>Kilometers per hour (km/h)</p>
-                    <mat-icon *ngIf="isMetric" matSuffix>check</mat-icon>
-                </div>
-                <div class="unit-wrapper" [class.active]="!isMetric">
-                    <p>Miles per hour (mph)</p>
-                    <mat-icon *ngIf="!isMetric" matSuffix>check</mat-icon>
-                </div>
-            </div>
-            <hr class="separator">
+    <div class="section">
+      <p class="section-name">Wind Speed</p>
+      <div class="options">
+        <div class="unit-wrapper" [class.active]="isMetric">
+          <p>Kilometers per hour (km/h)</p>
+          @if (isMetric) {
+            <mat-icon matSuffix>check</mat-icon>
+          }
         </div>
+        <div class="unit-wrapper" [class.active]="!isMetric">
+          <p>Miles per hour (mph)</p>
+          @if (!isMetric) {
+            <mat-icon matSuffix>check</mat-icon>
+          }
+        </div>
+      </div>
+      <hr class="separator">
+    </div>
 
-        <div class="section">
-            <p class="section-name">Precipitation</p>
-            <div class="options">
-                <div class="unit-wrapper" [class.active]="isMetric">
-                    <p>Millimeters (mm)</p>
-                    <mat-icon *ngIf="isMetric" matSuffix>check</mat-icon>
-                </div>
-                <div class="unit-wrapper" [class.active]="!isMetric">
-                    <p>Inches (in)</p>
-                    <mat-icon *ngIf="!isMetric" matSuffix>check</mat-icon>
-                </div>
-            </div>
+    <div class="section">
+      <p class="section-name">Precipitation</p>
+      <div class="options">
+        <div class="unit-wrapper" [class.active]="isMetric">
+          <p>Millimeters (mm)</p>
+          @if (isMetric) {
+            <mat-icon matSuffix>check</mat-icon>
+          }
         </div>
-    </mat-menu>
+        <div class="unit-wrapper" [class.active]="!isMetric">
+          <p>Inches (in)</p>
+          @if (!isMetric) {
+            <mat-icon matSuffix>check</mat-icon>
+          }
+        </div>
+      </div>
+    </div>
+  </mat-menu>
 </div>

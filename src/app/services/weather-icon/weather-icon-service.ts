@@ -22,4 +22,20 @@ export class WeatherIconService {
         const match = ranges.find(({ max }) => weatherCode <= max);
         return match ? `${prefixPath}${match.icon}` : '';
     }
+
+    getAltText(weatherCode: number): string {
+        const altTexts = [
+            { value: 0, text: 'Sunny' },
+            { value: 2, text: 'Partly cloudy' },
+            { value: 3, text: 'Overcast' },
+            { value: 49, text: 'Fog' },
+            { value: 59, text: 'Drizzle' },
+            { value: 69, text: 'Rain' },
+            { value: 79, text: 'Snow' },
+            { value: 89, text: 'Rain' },
+            { value: 99, text: 'Storm' },
+        ];
+
+        return altTexts[weatherCode]?.text;
+    }
 }

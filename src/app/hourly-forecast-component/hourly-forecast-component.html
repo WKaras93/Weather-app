@@ -17,7 +17,7 @@
         @for (hourForecast of hourlyForecasts | slice:0:8; track hourForecast) {
             <div class="hour-card">
                 <span class="inline">
-                    <img [src]="getWeatherIcon(hourForecast.weatherCode)" alt="">
+                    <img [src]="getWeatherIcon(hourForecast.weatherCode)" [alt]="getAltTextForWeatherIcon(hourForecast.weatherCode)">
                     <p class="time">{{ hourForecast.time }}</p>
                 </span>
 
