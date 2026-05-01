@@ -30,4 +30,8 @@ export class DailyForecastComponent implements OnInit {
     public getWeatherIcon(weatherCode: number): string {
         return this._weatherIconService.getMappedWeatherIcon(weatherCode);
     }
+
+    public getAltTextForWeatherIcon(weatherCode: number): string {
+        return this._weatherIconService.getAltText(weatherCode);
+    }
 }

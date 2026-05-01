@@ -1,50 +1,54 @@
 <div class="search-container">
-    <mat-form-field class="search-form-field">
-        <mat-label>Search for a place...</mat-label>
+  <mat-form-field class="search-form-field">
+    <mat-label>Search for a place...</mat-label>
 
-        <mat-icon matPrefix>search</mat-icon>
+    <mat-icon matPrefix>search</mat-icon>
 
-        <input
-            #searchInputRef
-            matInput
-            id="searchLocation"
-            name="searchLocation"
-            (ngModelChange)="onSearchChange($event)"
-            [matAutocomplete]="auto"
-            [(ngModel)]="searchLocationValue"
+    <input
+      #searchInputRef
+      matInput
+      id="searchLocation"
+      name="searchLocation"
+      (ngModelChange)="onSearchChange($event)"
+      [matAutocomplete]="auto"
+      [(ngModel)]="searchLocationValue"
+      >
+
+    @if (searchLocationValue) {
+      <mat-icon
+        matSuffix
+        (click)="clearInput(searchInputRef)"
         >
+        close
+      </mat-icon>
+    }
 
-        <mat-icon
-            *ngIf="searchLocationValue"
-            matSuffix
-            (click)="clearInput(searchInputRef)"
-        >
-            close
-        </mat-icon>
+    <mat-autocomplete
+      #auto
+      class="city-suggestions-container"
+      (optionSelected)="selectCity($event.option.value)"
+      >
+      @if ((searchLocationValue || '').length < 3) {
+        <mat-option disabled>
+          Type at least 3 characters
+        </mat-option>
+      }
 
-        <mat-autocomplete
-            #auto
-            class="city-suggestions-container"
-            (optionSelected)="selectCity($event.option.value)"
-            >
-            <mat-option *ngIf="(searchLocationValue || '').length < 3" disabled>
-                Type at least 3 characters
-            </mat-option>
+      @for (city of citySuggestions; track city) {
+        <mat-option
+          [value]="city"
+          >
+          {{ city.name }}, {{ city.country }}
+        </mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
 
-            <mat-option
-                *ngFor="let city of citySuggestions"
-                [value]="city"
-            >
-                {{ city.name }}, {{ city.country }}
-            </mat-option>
-        </mat-autocomplete>
-    </mat-form-field>
-
-    <button
-        aria-label="Search"
-        class="search-location-button"
-        (click)="searchLocation()"
+  <button
+    aria-label="Search"
+    class="search-location-button"
+    (click)="searchLocation()"
     >
-        Search
-    </button>
+    Search
+  </button>
 </div>
