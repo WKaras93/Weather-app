@@ -12,6 +12,4 @@ import { ForecastComponent } from '../forecast-component/forecast-component';
   templateUrl: './main-content.html',
   styleUrl: './main-content.less'
 })
-export class MainContentComponent {
-
-}
+export class MainContentComponent {}

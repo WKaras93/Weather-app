@@ -7,6 +7,4 @@ import { UnitsComponent } from '../units-component/units-component';
   templateUrl: './header.html',
   styleUrl: './header.less'
 })
-export class HeaderComponent {
-
-}
+export class HeaderComponent { }

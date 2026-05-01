@@ -43,4 +43,14 @@ describe('DailyForecastComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  describe('getWeatherIcon', () => {
+    it('should call getMappedWeatherIcon with correct weather code', () => {
+      const weatherCode = 1;
+
+      component.getWeatherIcon(weatherCode);
+
+      expect(weatherIconStub.getMappedWeatherIcon).toHaveBeenCalledWith(weatherCode);
+    });
+  })
 });

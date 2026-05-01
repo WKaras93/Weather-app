@@ -8,7 +8,4 @@ import { MainContentComponent } from '../main-content/main-content';
   templateUrl: './home.html',
   styleUrl: './home.less'
 })
-export class HomeComponent {
-
-}
-
+export class HomeComponent { }

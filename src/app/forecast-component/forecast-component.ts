@@ -60,10 +60,6 @@ export class ForecastComponent implements OnInit, OnDestroy {
         this._weatherFacadeService.isLoading$
             .pipe(takeUntil(this.destroy$))
             .subscribe(isLoading => this.isLoading = isLoading);
-
-        // this._weatherFacadeService.error$
-        //     .pipe(takeUntil(this.destroy$))
-        //     .subscribe(error => this.error = error);
     }
 
     ngOnDestroy(): void {
