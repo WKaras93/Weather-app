@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class WeatherIconService {
     getMappedWeatherIcon(weatherCode: number): string {
-        const prefixPath = 'images/';
+        const prefixPath = '/assets/images/';
 
         const ranges: { max: number; icon: string }[] = [
             { max: 0, icon: 'icon-sunny.webp' },
