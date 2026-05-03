@@ -35,6 +35,7 @@ const weatherFacadeStub = {
 
 const weatherIconStub: Mocked<WeatherIconService> = {
   getMappedWeatherIcon: vi.fn(),
+  getAltText: vi.fn(),
 };
 
 describe('ForecastComponent', () => {
