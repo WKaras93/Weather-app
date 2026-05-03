@@ -47,7 +47,7 @@ export class ForecastComponent implements OnInit, OnDestroy {
 
         this._weatherFacadeService.location$
             .pipe(takeUntil(this.destroy$))
-            .subscribe(location => this.locationName = location![1]);
+            .subscribe(location => this.locationName = location ? location[1] : { city: '', country: '' });
     
         this._weatherFacadeService.currentWeather$
             .pipe(takeUntil(this.destroy$))
@@ -70,4 +70,9 @@ export class ForecastComponent implements OnInit, OnDestroy {
     public getWeatherIcon(weatherCode: number): string {
         return this._weatherIconService.getMappedWeatherIcon(weatherCode);
     }
+
+    public getAltTextForWeatherIcon(weatherCode: number): string {
+        return this._weatherIconService.getAltText(weatherCode);
+    }
+
 }

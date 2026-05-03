@@ -6,7 +6,7 @@
             <div class="day-card">
                 <p>{{ day.day }}</p>
 
-                <img [src]="getWeatherIcon(day.forecastCode)" alt="">
+                <img [src]="getWeatherIcon(day.forecastCode)" [alt]="getAltTextForWeatherIcon(day.forecastCode)">
 
                 <div class="temperature-container">
                     <p>{{ day.maxTemperature | temperatureDisplay }}</p>

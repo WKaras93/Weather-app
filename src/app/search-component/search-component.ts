@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +14,6 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap, takeUntil } fro
 @Component({
   selector: 'app-search-component',
   imports: [
-    CommonModule,
     MatSelectModule,
     MatFormFieldModule,
     MatInputModule,
@@ -22,7 +21,7 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap, takeUntil } fro
     MatIconModule,
     FormsModule,
     MatAutocompleteModule
-  ],
+],
   templateUrl: './search-component.html',
   styleUrl: './search-component.less'
 })

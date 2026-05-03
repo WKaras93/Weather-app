@@ -61,6 +61,10 @@ export class HourlyForecastComponent implements OnInit {
       return this._weatherIconService.getMappedWeatherIcon(weatherCode);
   }
 
+  public getAltTextForWeatherIcon(weatherCode: number): string {
+        return this._weatherIconService.getAltText(weatherCode);
+    }
+
   public onDayChange(selectedDay: DayOption): void {
     this.selectedDay = selectedDay;
     this._loadHourlyForecasts(this.selectedDay.date);

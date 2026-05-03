@@ -19,6 +19,7 @@ const weatherFacadeStub: Mocked<Pick<WeatherFacadeService, 'dailyForecasts$'>> =
 
 const weatherIconStub: Mocked<WeatherIconService> = {
   getMappedWeatherIcon: vi.fn(),
+  getAltText: vi.fn(),
 };
 
 describe('DailyForecastComponent', () => {
